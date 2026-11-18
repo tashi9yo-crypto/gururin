@@ -37,10 +37,10 @@
     --accent:#e08a6d; --accent-soft:#b56a52; --gold:#d6b46a;
     --rule:#3a342e; --shadow:rgba(0,0,0,.5);
     --ui:#1f1d1a; --ui-ink:#e7dfd2; --ui-line:#34302b; --ui-hover:#2a2723;
-    --sel:rgba(224,138,109,.25);
+    --sel:rgba(224,138,109,.25);color-scheme:dark;
   }
 }
-:root[data-theme="dark"]{
+:root[data-theme="dark"]{color-scheme:dark;
   --desk:#121110; --desk-2:#0b0a09;
   --paper:#1d1b19; --paper-edge:#161412;
   --ink:#e7dfd2; --ink-soft:#b9ad9c; --ink-faint:#857a6c;
@@ -363,6 +363,7 @@ const store = {
   set(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
 };
 const saved = store.get();
+const HOST_THEME = document.documentElement.getAttribute("data-theme");
 const state = {
   ch: 0, page: 0, pages: 1, perView: 1, step: 0, colW: 0, gap: 0,
   settings: Object.assign({theme:"auto", font:"serif", fs:18, lh:1.9, layout:"auto"}, saved.settings || {}),
@@ -401,7 +402,7 @@ function showCover(on){
 /* ── 설정 적용 ── */
 function applySettings(){
   const s = state.settings, root = document.documentElement;
-  if (s.theme === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", s.theme);
+  if (s.theme === "auto") { if (HOST_THEME) root.setAttribute("data-theme", HOST_THEME); else root.removeAttribute("data-theme"); } else root.setAttribute("data-theme", s.theme);
   root.style.setProperty("--fs", s.fs + "px");
   root.style.setProperty("--lh", s.lh);
   root.style.setProperty("--font-body", FONTS[s.font] || FONTS.serif);
